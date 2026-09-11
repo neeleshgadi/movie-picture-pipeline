@@ -4,3 +4,4 @@ resources:
   - service.yaml
   - deployment.yaml
 namespace: default
+# Deployment trigger only; application behavior is unchanged.
