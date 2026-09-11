@@ -1,0 +1,75 @@
+name: Frontend CI
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - starter/frontend/**
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: starter/frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: starter/frontend/.nvmrc
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            starter/frontend/node_modules
+          key: \${{ runner.os }}-frontend-\${{ hashFiles('starter/frontend/package-lock.json') }}
+          restore-keys: |
+            \${{ runner.os }}-frontend-
+      - run: npm ci
+      - run: npm run lint
+
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: starter/frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: starter/frontend/.nvmrc
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            starter/frontend/node_modules
+          key: \${{ runner.os }}-frontend-\${{ hashFiles('starter/frontend/package-lock.json') }}
+          restore-keys: |
+            \${{ runner.os }}-frontend-
+      - run: npm ci
+      - run: CI=true npm test -- --watchAll=false
+
+  build:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: starter/frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: starter/frontend/.nvmrc
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            starter/frontend/node_modules
+          key: \${{ runner.os }}-frontend-\${{ hashFiles('starter/frontend/package-lock.json') }}
+          restore-keys: |
+            \${{ runner.os }}-frontend-
+      - run: npm ci
+      - run: CI=true npm test -- --watchAll=false
+      - run: docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag mp-frontend:\${{ github.sha }} .
