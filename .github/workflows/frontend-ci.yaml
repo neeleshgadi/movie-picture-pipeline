@@ -24,9 +24,9 @@ jobs:
           path: |
             ~/.npm
             starter/frontend/node_modules
-          key: \${{ runner.os }}-frontend-\${{ hashFiles('starter/frontend/package-lock.json') }}
+          key: ${{ runner.os }}-frontend-${{ hashFiles('starter/frontend/package-lock.json') }}
           restore-keys: |
-            \${{ runner.os }}-frontend-
+            ${{ runner.os }}-frontend-
       - run: npm ci
       - run: npm run lint
 
@@ -45,9 +45,9 @@ jobs:
           path: |
             ~/.npm
             starter/frontend/node_modules
-          key: \${{ runner.os }}-frontend-\${{ hashFiles('starter/frontend/package-lock.json') }}
+          key: ${{ runner.os }}-frontend-${{ hashFiles('starter/frontend/package-lock.json') }}
           restore-keys: |
-            \${{ runner.os }}-frontend-
+            ${{ runner.os }}-frontend-
       - run: npm ci
       - run: CI=true npm test -- --watchAll=false
 
@@ -67,9 +67,9 @@ jobs:
           path: |
             ~/.npm
             starter/frontend/node_modules
-          key: \${{ runner.os }}-frontend-\${{ hashFiles('starter/frontend/package-lock.json') }}
+          key: ${{ runner.os }}-frontend-${{ hashFiles('starter/frontend/package-lock.json') }}
           restore-keys: |
-            \${{ runner.os }}-frontend-
+            ${{ runner.os }}-frontend-
       - run: npm ci
       - run: CI=true npm test -- --watchAll=false
-      - run: docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag mp-frontend:\${{ github.sha }} .
+      - run: docker build --build-arg REACT_APP_MOVIE_API_URL=http://localhost:5000 --tag mp-frontend:${{ github.sha }} .
